@@ -2,6 +2,8 @@ import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 
+import "controls"
+
 Window {
     id: mainwindow
     width: 1000
@@ -45,15 +47,9 @@ Window {
                 anchors.leftMargin: 0
                 anchors.topMargin: 0
 
-                Button {
-                    id: toggle
-                    width: 70
-                    height: 60
-                    text: qsTr("Toggle")
-                    anchors.left: parent.left
-                    anchors.top: parent.top
-                    anchors.leftMargin: 0
-                    anchors.topMargin: 0
+                ToggleButton {
+                    btnColorClicked: "#8ac4df"
+                    //dont need to put anything here because its all defined in that other QML file.
                 }
 
                 Rectangle {
@@ -155,11 +151,8 @@ Window {
                     anchors.rightMargin: 0
                     anchors.topMargin: 0
 
-                    Button {
-                        id: btnminimize
-                        width: 35
-                        height: 35
-                        text: qsTr("Button")
+                    TopBarButton{
+
                     }
                 }
             }
