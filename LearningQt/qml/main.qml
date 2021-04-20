@@ -48,7 +48,8 @@ Window {
                 anchors.topMargin: 0
 
                 ToggleButton {
-                    btnColorClicked: "#8ac4df"
+                    //you can overwrite attributes defined in this qml file but just specifying the attribute here.
+                    // for example like btnColorClicked: "#ffffff" will overwrit the value specified in ToggleButton.qml
                     //dont need to put anything here because its all defined in that other QML file.
                 }
 
@@ -84,7 +85,7 @@ Window {
                     Label {
                         id: labelRightInfo
                         color: "#1c3a55"
-                        text: qsTr("This is sparta!!")
+                        text: qsTr("[ HOME ]")
                         anchors.left: labeltopinfo.right
                         anchors.right: parent.right
                         anchors.top: parent.top
@@ -152,7 +153,19 @@ Window {
                     anchors.topMargin: 0
 
                     TopBarButton{
+                        id: btnMinimize
 
+                    }
+
+                    TopBarButton {
+                        id: btnMaximize
+                        btnIconSource: "../images/svg_images/maximize_icon.svg"
+                    }
+
+                    TopBarButton {
+                        id: btnClose
+                        btnColorClicked: "#d3299a"
+                        btnIconSource: "../images/svg_images/close_icon.svg"
                     }
                 }
             }

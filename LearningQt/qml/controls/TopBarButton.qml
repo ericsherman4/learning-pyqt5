@@ -40,6 +40,8 @@ Button {
             height: 16
             width: 16
             fillMode: Image.PreserveAspectFit
+            visible: false
+            antialiasing: false
         }
 
         ColorOverlay{
