@@ -23,3 +23,5 @@ can do alignment (margins in the layout tab) based on other items, but dropping 
 looks like 1 unit for height != 1 unit for width in terms of spacing size. this was the same for tkinter.
 
 use svg for icons so as not to overload the rendering of the application
+
+can you use a "column" item under the Qt Quick - Positioner section. anything you put in here will stack nicely and auto align I think. useful for like side menus. 

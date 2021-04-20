@@ -9,6 +9,7 @@ from PySide2.QtQml import QQmlApplicationEngine
 if __name__ == "__main__":
     app = QGuiApplication(sys.argv)
     engine = QQmlApplicationEngine()
+    # next line must point to the main QML file
     engine.load(os.path.join(os.path.dirname(__file__), "./qml/main.qml"))
 
     if not engine.rootObjects():
