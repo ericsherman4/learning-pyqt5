@@ -25,3 +25,10 @@ looks like 1 unit for height != 1 unit for width in terms of spacing size. this 
 use svg for icons so as not to overload the rendering of the application
 
 can you use a "column" item under the Qt Quick - Positioner section. anything you put in here will stack nicely and auto align I think. useful for like side menus. 
+
+when you click on like a button which is the child of some other item like a rectangle, in the geometry tab, you can click the little icon to the left of the width field when you over your mouse over and hit set binding.
+then you can set the width of the child object equal to any item and it will follow the parent item whenever it is changed. (it looks like this does not scale things though)
+
+for example:
+this line can be found in the child object, where leftmenu is the parent object rectangle.
+width: leftmenu.width

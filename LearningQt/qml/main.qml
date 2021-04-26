@@ -189,6 +189,7 @@ Window {
                     anchors.left: parent.left
                     anchors.top: parent.top
                     anchors.bottom: parent.bottom
+                    clip: true
                     anchors.bottomMargin: 0
                     anchors.leftMargin: 0
                     anchors.topMargin: 0
@@ -205,12 +206,38 @@ Window {
                         anchors.bottomMargin: 90
                         anchors.topMargin: 0
 
-                        Button {
-                            id: button
-                            visible: true
-                            text: qsTr("Button")
-                            clip: false
+                        LeftMenuBtn {
+                            id: btnHome
+                            width: leftmenu.width
+                            text: qsTr("Home")
+                            isActiveMenu: true
+
                         }
+
+                        LeftMenuBtn {
+                            id: btnOpen
+                            width: leftmenu.width
+                            text: qsTr("Open")
+                            btnIconSource: "../images/svg_images/open_icon.svg"
+                        }
+
+                        LeftMenuBtn {
+                            id: btnSave
+                            width: leftmenu.width
+                            text: qsTr("Save")
+                            btnIconSource: "../images/svg_images/save_icon.svg"
+                        }
+                    }
+
+                    LeftMenuBtn {
+                        id: btnSettings
+                        x: 0
+                        y: 180
+                        width: leftmenu.width
+                        text: qsTr("Settings")
+                        anchors.bottom: parent.bottom
+                        anchors.bottomMargin: 25
+                        btnIconSource: "../images/svg_images/settings_icon.svg"
                     }
                 }
 
