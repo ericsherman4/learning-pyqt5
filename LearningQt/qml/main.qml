@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
+import QtGraphicalEffects 1.15
 
 import "controls"
 
@@ -11,6 +12,9 @@ Window {
     opacity: 1
     visible: true
     title: qsTr("Made by Humans on Earth")
+
+    //remove the title bar
+    flags: Qt.Window | Qt.FramelessWindowHint
 
     Rectangle {
         id: background
@@ -51,6 +55,10 @@ Window {
                     //you can overwrite attributes defined in this qml file but just specifying the attribute here.
                     // for example like btnColorClicked: "#ffffff" will overwrit the value specified in ToggleButton.qml
                     //dont need to put anything here because its all defined in that other QML file.
+
+                    //this starts the animation. you are calling running on the animation id animationMenu
+
+                    onClicked: animationMenu.running = true
                 }
 
                 Rectangle {
@@ -111,13 +119,21 @@ Window {
                     anchors.leftMargin: 70
                     anchors.topMargin: 0
 
+                    //functions for being able to drag the window around
+                    DragHandler{
+                        onActiveChanged: if(active){
+                                             mainwindow.startSystemMove()
+                                         }
+                    }
+
                     Image {
                         id: iconApp
-                        width: 28
+                        width: 22
+                        height: 22
                         anchors.left: parent.left
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
-                        source: "qrc:/qtquickplugin/images/template_image.png"
+                        source: "../images/svg_images/icon_app_top.svg"
                         anchors.leftMargin: 5
                         anchors.bottomMargin: 0
                         anchors.topMargin: 0
@@ -193,6 +209,25 @@ Window {
                     anchors.bottomMargin: 0
                     anchors.leftMargin: 0
                     anchors.topMargin: 0
+
+                    // stuff for expanding and collapsing the Menu
+                    PropertyAnimation {
+                        id: animationMenu
+                        target: leftmenu
+                        property:"width" //the property you want to animate
+                        //to: 250          //the width you want the animation to go to.
+
+                        property int expandedwidth: 200
+                        property int retractedwidth: 70
+
+                        to: leftmenu.width == expandedwidth ? retractedwidth : expandedwidth //set the to value to be 70 if its already expanded, otherwise set it to 250
+
+                        //or you can code it like this
+                        //to: if(leftmenu.width == 70) return 200; else return 70
+
+                        duration: 1000   //duration of the animation in milliseconds.
+                        easing.type: Easing.OutBounce //Type of animation to use.
+                    }
 
                     Column {
                         id: column
@@ -286,6 +321,26 @@ Window {
             }
         }
     }
+
+//    //adding drop shadow?
+      //I think this doesnt work because i removed that transparent border where i think this shadow would go.
+
+//    DropShadow{
+//        anchors.fill :bg
+//        horizontalOffset: 0
+//        verticalOffset: 0
+//        radius: 10
+//        samples:16
+//        color: "#80000000"
+//        source:bg
+//        z:0
+
+//    }
+
+
+
 }
+
+
 
 
