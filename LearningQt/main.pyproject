@@ -1,3 +1,3 @@
 {
-    "files": ["main.qml","qml/pages/homePage.qml","qml/controls/TopBarButton.qml","qml/controls/LeftMenuBtn.qml","main.py","qml/controls/ToggleButton.qml","qml/pages/SettingsPage.qml"]
+    "files": ["main.qml","qml/pages/homePage.qml","qml/controls/CustomTextField.qml","qml/controls/TopBarButton.qml","qml/controls/LeftMenuBtn.qml","main.py","qml/pages/SettingsPage.qml","qml/controls/ToggleButton.qml","qml/controls/CustomBtn.qml"]
 }

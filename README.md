@@ -37,3 +37,6 @@ width: leftmenu.width
 go into the project tab by clicking the wrench icon labeled projects on the left panel of Qt Creator (under the debug button)
 under the "environment" section, you need to add a variable labeled "QT_OPENGL" with the value "angle" to fix it
 
+so this is fixed when running from QT Creator app, but when running from python (by just calling the function from git bash), it doesnt work!! how do i add build environment variables from python???
+
+
