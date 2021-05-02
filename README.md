@@ -32,3 +32,8 @@ then you can set the width of the child object equal to any item and it will fol
 for example:
 this line can be found in the child object, where leftmenu is the parent object rectangle.
 width: leftmenu.width
+
+### IMPORTANT: Laggy resizing animations
+go into the project tab by clicking the wrench icon labeled projects on the left panel of Qt Creator (under the debug button)
+under the "environment" section, you need to add a variable labeled "QT_OPENGL" with the value "angle" to fix it
+

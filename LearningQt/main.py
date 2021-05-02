@@ -13,6 +13,7 @@ if __name__ == "__main__":
     engine.load(os.path.join(os.path.dirname(__file__), "./qml/main.qml"))
     # engine.load(os.path.join(os.path.dirname(__file__), "./qml/controls/LeftMenuBtn.qml"))
     # cant run this by itself cause you need a window
+
     if not engine.rootObjects():
         sys.exit(-1)
     sys.exit(app.exec_())

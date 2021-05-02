@@ -9,12 +9,57 @@ Window {
     id: mainwindow
     width: 1000
     height: 580
+    minimumWidth:800
+    minimumHeight:500
     opacity: 1
     visible: true
+    color: "#00000000"
     title: qsTr("Made by Humans on Earth")
 
     //remove the title bar
     flags: Qt.Window | Qt.FramelessWindowHint
+
+    //Properties
+    property int windowStatus: 0 //0 = application in normal status
+                                 //1 = application is maximized
+
+    //Internal functions
+    QtObject{
+        id: internal
+
+        function toggleResizeMarkers(value)
+        {
+            resizeBottom.visible = value
+            resizeTop.visible = value
+            resizeRight.visble = value
+            resizeLeft.visible = value
+            reizeBottomRightCorner.visible = value
+        }
+
+        function maximizeRestore(){
+            if(windowStatus == 0){ //app in normal status
+                mainwindow.showMaximized()
+                btnMaximize.btnIconSource = "../images/svg_images/restore_icon.svg"
+                windowStatus = 1 //app now in fullscreen
+                internal.toggleResizeMarkers(!windowStatus) //we want all of the resize things to not be visible now, so we pass in zero
+            }
+            else{
+                mainwindow.showNormal()
+                btnMaximize.btnIconSource = "../images/svg_images/maximize_icon.svg"
+                windowStatus = 0
+                internal.toggleResizeMarkers(!windowStatus) //we want all of the resize things to not be visible now, so we pass in zero
+            }
+        }
+
+        //for taking care of the case where you fullscreen the window but then you use drag the top bar down
+        //to return it to normal size instead of clicking the maximize button again. the window status variable needs to be updated.
+        function updateWindowStatus(){
+            windowStatus = 0
+            btnMaximize.btnIconSource = "../images/svg_images/maximize_icon.svg"
+        }
+
+    }
+
 
     Rectangle {
         id: background
@@ -123,6 +168,7 @@ Window {
                     DragHandler{
                         onActiveChanged: if(active){
                                              mainwindow.startSystemMove()
+                                             internal.updateWindowStatus()
                                          }
                     }
 
@@ -170,18 +216,32 @@ Window {
 
                     TopBarButton{
                         id: btnMinimize
+                        onClicked: mainwindow.showMinimized()
+
+                        /*
+                          to execute multiple functions:
+                          do
+                          onClicked: {
+                            //function call 1
+                            //function call 2
+                            //etc..
+                          }
+
+                        */
 
                     }
 
                     TopBarButton {
                         id: btnMaximize
                         btnIconSource: "../images/svg_images/maximize_icon.svg"
+                        onClicked: internal.maximizeRestore()
                     }
 
                     TopBarButton {
                         id: btnClose
                         btnColorClicked: "#d3299a"
                         btnIconSource: "../images/svg_images/close_icon.svg"
+                        onClicked:mainwindow.close()
                     }
                 }
             }
@@ -225,8 +285,8 @@ Window {
                         //or you can code it like this
                         //to: if(leftmenu.width == 70) return 200; else return 70
 
-                        duration: 1000   //duration of the animation in milliseconds.
-                        easing.type: Easing.OutBounce //Type of animation to use.
+                        duration: 500   //duration of the animation in milliseconds.
+                        easing.type: Easing.InOutQuint //Type of animation to use.
                     }
 
                     Column {
@@ -246,6 +306,16 @@ Window {
                             width: leftmenu.width
                             text: qsTr("Home")
                             isActiveMenu: true
+
+                            onClicked: {
+                                //isActiveMenu is a variable we defined in the LeftMenuBtn QML file.
+                                btnHome.isActiveMenu = true
+                                btnSettings.isActiveMenu = false
+                                stackView.push(Qt.resolvedUrl("pages/homePage.qml"))
+                                //pagesView.setSource(Qt.resolvedUrl("pages/homePage.qml"))
+                                //homePageView.visible = true
+                                //settingsPageView.visible = false
+                            }
 
                         }
 
@@ -273,6 +343,19 @@ Window {
                         anchors.bottom: parent.bottom
                         anchors.bottomMargin: 25
                         btnIconSource: "../images/svg_images/settings_icon.svg"
+
+                        onClicked: {
+                            //isActiveMenu is a variable we defined in the LeftMenuBtn QML file.
+                            btnHome.isActiveMenu = false
+                            btnSettings.isActiveMenu = true
+                            stackView.push(Qt.resolvedUrl("pages/SettingsPage.qml"))
+                            //pagesView.setSource(Qt.resolvedUrl("pages/SettingsPage.qml"))
+                            //homePageView.visible = false
+                            //settingsPageView.visible = true
+                        }
+
+
+
                     }
                 }
 
@@ -287,6 +370,39 @@ Window {
                     anchors.leftMargin: 0
                     anchors.topMargin: 0
                     anchors.bottomMargin: 25
+
+                    //This is one method for loading pages, below is another.
+
+
+                    StackView {
+                        id: stackView
+                        visible: true
+                        anchors.fill: parent
+                        clip: true
+                        initialItem: Qt.resolvedUrl("pages/homePage.qml") //set the starting item that is shown in stackView
+                    }
+
+
+                    //StackView uses animations, but loader does not. also stackview literally works like a stack.
+                    //Disadvantage with stackView: when the pages are changed, they are actually reloaded and they lose
+                    //all the informaiton they had on it previously.
+                    //well apparently after all that explanation, we are going to be using StackView
+                    /*
+                    Loader{
+                        id:homePageView
+                        anchors.fill: parent
+                        source: Qt.resolvedUrl("pages/homePage.qml")
+                        visible: true
+                    }
+
+                    Loader{
+                        id:settingsPageView
+                        anchors.fill: parent
+                        source: Qt.resolvedUrl("pages/SettingsPage.qml")
+                        visible : false
+                    }
+                    */
+
                 }
 
                 Rectangle {
@@ -317,25 +433,144 @@ Window {
                         font.pointSize: 8
                         anchors.bottomMargin: 0
                     }
+
+                    MouseArea {
+                        id: reizeBottomRightCorner
+                        width: 25
+                        height: 25
+                        anchors.right: parent.right
+                        anchors.bottom: parent.bottom
+                        anchors.bottomMargin: 0
+                        anchors.rightMargin: 0
+
+                        cursorShape: Qt.SizeFDiagCursor
+
+                        DragHandler {
+                            target: null
+                            onActiveChanged: if(active){mainwindow.startSystemResize(Qt.RightEdge | Qt.BottomEdge)}
+                        }
+
+                        Image {
+                            id: resizeImage
+                            width: 16
+                            height: 16
+                            anchors.fill: parent
+                            anchors.topMargin: 5
+                            anchors.leftMargin: 5
+                            source: "../images/svg_images/resize_icon.svg"
+                            sourceSize.height: 16
+                            sourceSize.width: 16
+                            fillMode: Image.PreserveAspectFit
+                            antialiasing: false
+
+                        }
+
+                        ColorOverlay{
+                            anchors.fill:resizeImage //this uses anchoring based on image above
+                            source: resizeImage
+                            color: "#000000"
+                            antialiasing: false
+                            width: resizeImage.width
+                            height: resizeImage.height
+                        }
+                    }
                 }
             }
         }
     }
 
-//    //adding drop shadow?
-      //I think this doesnt work because i removed that transparent border where i think this shadow would go.
 
-//    DropShadow{
-//        anchors.fill :bg
-//        horizontalOffset: 0
-//        verticalOffset: 0
-//        radius: 10
-//        samples:16
-//        color: "#80000000"
-//        source:bg
-//        z:0
+    //    //adding drop shadow?
+    //I think this doesnt work because i removed that transparent border where i think this shadow would go.
 
-//    }
+    //    DropShadow{
+    //        anchors.fill :bg
+    //        horizontalOffset: 0
+    //        verticalOffset: 0
+    //        radius: 10
+    //        samples:16
+    //        color: "#80000000"
+    //        source:bg
+    //        z:0
+
+    //    }
+
+    //Resizing on the left edge
+    MouseArea {
+        id: resizeLeft
+        width: 7
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.leftMargin: 0
+        anchors.bottomMargin: 7
+        anchors.topMargin: 7
+
+        cursorShape:  Qt.SizeHorCursor
+
+        DragHandler {
+            target:null
+            onActiveChanged: if (active) { mainwindow.startSystemResize(Qt.LeftEdge)}
+        }
+    }
+
+    //Resizing the right edge
+    MouseArea {
+        id: resizeRight
+        width: 7
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.rightMargin: 0
+        anchors.bottomMargin: 25
+        anchors.topMargin: 7
+
+        cursorShape:  Qt.SizeHorCursor
+
+        DragHandler {
+            target:null
+            onActiveChanged: if (active) { mainwindow.startSystemResize(Qt.RightEdge)}
+        }
+    }
+
+    //resizing the bottom edge
+    MouseArea {
+        id: resizeBottom
+        height: 7
+        anchors.right: parent.right
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+        anchors.rightMargin: 25
+        anchors.leftMargin: 7
+        anchors.bottomMargin: 0
+
+        cursorShape:  Qt.SizeVerCursor
+
+        DragHandler {
+            target:null
+            onActiveChanged: if (active) { mainwindow.startSystemResize(Qt.BottomEdge)}
+        }
+    }
+
+    //resizing the top edge
+    MouseArea {
+        id: resizeTop
+        height: 7
+        anchors.right: parent.right
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.rightMargin: 7
+        anchors.leftMargin: 7
+        anchors.topMargin: 0
+
+        cursorShape:  Qt.SizeVerCursor
+
+        DragHandler {
+            target:null
+            onActiveChanged: if (active) { mainwindow.startSystemResize(Qt.TopEdge)}
+        }
+    }
+
 
 
 
@@ -344,3 +579,9 @@ Window {
 
 
 
+
+/*##^##
+Designer {
+    D{i:0;formeditorZoom:0.9}D{i:31}D{i:29}D{i:37;invisible:true}
+}
+##^##*/
