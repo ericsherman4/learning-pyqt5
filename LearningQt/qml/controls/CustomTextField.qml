@@ -7,8 +7,11 @@ TextField {
     width: 640
     height: 40
     placeholderText: qsTr("Type something")
-    placeholderTextColor: "#a1b1df"
-    color : "#a1b1df"
+    //placeholderTextColor: "#a1b1df"
+    //color : "#a1b1df"
+
+    placeholderTextColor: "#ffffff"
+    color : "#ffffff"
 
 
     property color defaultColor: "#345b7c"

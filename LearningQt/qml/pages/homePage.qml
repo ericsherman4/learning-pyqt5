@@ -45,25 +45,56 @@ Item {
                     anchors.right: changeNameBtn.left
                     defaultColor: "#315674"
                     anchors.rightMargin: 10
+
+                    Keys.enabled: true
+//                    Keys.onEnterPressed: {
+//                           backend.welcomeText(customTextField.text)
+//                    }
+//                      Keys.onReturnPressed: {
+//                         backend.welcomeText(customTextField.text)
+//                      }
+
+                    //can do it the way above, or the way below.
+
+
+                    Keys.onPressed: {
+                        if(event.key === Qt.Key_Enter | event.key === Qt.Key_Return){
+                            event.key === Qt.Key_Enter ? console.log("Enter key has been pressed.") :
+                                                            console.log("Return key has been pressed.")
+                            backend.welcomeText(customTextField.text)
+                        }
+                    }
+
                 }
 
                 CustomBtn {
                     id: changeNameBtn
                     width : 150
                     anchors.verticalCenter: parent.verticalCenter
-                    anchors.right: switch1.left
+                    anchors.right: switchHome.left
                     colorPressed: "#234a6b"
                     colorHovered: "#4a97df"
                     anchors.rightMargin: 1
+
+                    onClicked: {
+                        backend.welcomeText(customTextField.text)
+                    }
 
 
                 }
 
                 Switch {
-                    id: switch1
+                    id: switchHome
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.right: parent.right
+                    checked: true
                     anchors.rightMargin: 10
+
+                    // whenever switch is changed, send the data to the backend.
+                    onToggled: {
+                        //whenever its clicked, the state has already changed.the new state is what is passed in.
+                        backend.showHideRectangle(switchHome.checked)
+                    }
                 }
 
 
@@ -78,6 +109,7 @@ Item {
                 anchors.right: parent.right
                 anchors.top: interactiveBar.bottom
                 anchors.bottom: parent.bottom
+                clip: true
                 anchors.rightMargin: 0
                 anchors.leftMargin: 0
                 anchors.bottomMargin: 0
@@ -96,7 +128,7 @@ Item {
                     anchors.topMargin: 10
 
                     Label {
-                        id: label
+                        id: namelabel
                         x: 289
                         color: "#818181"
                         text: qsTr("Welcome")
@@ -110,7 +142,7 @@ Item {
                     }
 
                     Label {
-                        id: label1
+                        id: datelabel
                         x: 282
                         color: "#55aaff"
                         text: qsTr("Date")
@@ -142,7 +174,7 @@ Item {
 
                         Text {
                             id: text1
-                            text: "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">hi<br />my </p>\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">name</p>\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">is </p>\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">bob</p></body></html>"
+                            text: "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:9pt; font-weight:600; color:#ffffff;\">EG GENERAL PUBLIC LICENSE</span></p>\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt; color:#ffffff;\">Version 2.0.1, 4 June 2000</span></p>\n<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt; color:#ffffff;\"><br /></p>\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt; color:#ffffff;\">Copyright (c) 2021 </span><span style=\" font-size:8pt; font-weight:600; color:#ffffff;\">Eric S. Sherman</span></p>\n<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt; font-weight:600;\"><br /></p>\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt; font-weight:600; color:#55aaff;\">Attention: </span><span style=\" font-size:8pt; color:#ffffff;\">this project was created with the Open Source tools from Qt Company,</span></p>\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt; color:#ffffff;\">this project can be used for studies or personal non-commerical projects.</span></p>\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt; font-weight:600; color:#ffffff;\">If you are going to use it for </span><span style=\" font-size:8pt; font-weight:600; color:#55aaff;\">commerical use</span><span style=\" font-size:8pt; font-weight:600; color:#ffffff;\">, you need to purchase a license at </span><a name=\"http://www.qt.io\"></a><a href=\"http://www.qt.io\"><span style=\" font-size:8pt; font-weight:600; text-decoration: underline; color:#007af4;\">h</span></a><span style=\" font-size:8pt; font-weight:600; text-decoration: underline; color:#007af4;\">ttp://www.qt.io</span><span style=\" font-size:8pt; font-weight:600; color:#ffffff;\"> .</span></p>\n<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt; font-weight:600;\"><br /></p></body></html>"
                             anchors.fill: parent
                             font.pixelSize: 12
                             wrapMode: Text.WordWrap
@@ -152,6 +184,32 @@ Item {
                 }
             }
         }
+    }
+
+    //connecting user interface to python
+    Connections{
+        target: backend
+
+        // function needs to have the same name as the one we have defined but with "on" before it.
+        // has to be written in this way.
+        // timestamp 7:19 in the signal and slot video is very helpful
+        function onSetName(name)
+        {
+            namelabel.text = name
+        }
+
+        //NOTE, NOT ONLY DO YOU NEED TO ADD THE "on" BUT YOU NEED TO CAPITIALIZE THE FIRST LETTER
+
+        function onPrintTime(date)
+        {
+            datelabel.text = date
+        }
+
+        function onRectangleVisible(isChecked)
+        {
+            textInfo.visible = isChecked
+        }
+
     }
 
 }
