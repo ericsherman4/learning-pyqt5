@@ -2,7 +2,7 @@ import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 import QtGraphicalEffects 1.15
-
+import QtQuick.Dialogs 1.3
 import "controls"
 
 Window {
@@ -22,6 +22,10 @@ Window {
     //Properties
     property int windowStatus: 0 //0 = application in normal status
                                  //1 = application is maximized
+
+    // Load the properties that are on the current page of stackview
+    // documentation https://doc.qt.io/qt-5/qtqml-syntax-objectattributes.html#:~:text=Property%20Aliases&text=Unlike%20an%20ordinary%20property%20definition,property%20(the%20aliased%20property).
+    property alias actualPage: stackView.currentItem
 
     //Internal functions
     QtObject{
@@ -324,6 +328,21 @@ Window {
                             width: leftmenu.width
                             text: qsTr("Open")
                             btnIconSource: "../images/svg_images/open_icon.svg"
+
+                            onPressed: {
+                                fileOpen.open()
+                            }
+
+                            FileDialog {
+                                id: fileOpen
+                                title: "Please choose a text file"
+                                folder: shortcuts.home
+                                selectMultiple: false
+                                nameFilters: ["Text File (*.txt)"]
+                                onAccepted: {
+                                    backend.openTextFile(fileOpen.fileUrl)
+                                }
+                            }
                         }
 
                         LeftMenuBtn {
@@ -331,6 +350,23 @@ Window {
                             width: leftmenu.width
                             text: qsTr("Save")
                             btnIconSource: "../images/svg_images/save_icon.svg"
+
+                            onPressed: {
+                                fileClose.open()
+                            }
+
+                            FileDialog {
+                                id: fileClose
+                                title: "Save file"
+                                folder: shortcuts.home
+                                selectMultiple: false
+                                nameFilters: ["Text File (*.txt)"]
+                                selectExisting: false
+                                onAccepted: { //the file has been chosen the user clicks okay
+                                    backend.saveTextFile(actualPage.getText, fileClose.fileUrl)
+                                }
+                            }
+
                         }
                     }
 
@@ -379,7 +415,8 @@ Window {
                         visible: true
                         anchors.fill: parent
                         clip: true
-                        initialItem: Qt.resolvedUrl("pages/homePage.qml") //set the starting item that is shown in stackView
+                        // initialItem: Qt.resolvedUrl("pages/homePage.qml") //set the starting item that is shown in stackView
+                        initialItem: Qt.resolvedUrl("pages/textEditor.qml")
                     }
 
 
@@ -571,6 +608,14 @@ Window {
         }
     }
 
+    Connections {
+        target: backend
+
+        function onReadText(text){
+            actualPage.setText = text
+        }
+    }
+
 
 
 
@@ -582,6 +627,6 @@ Window {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:0.9}D{i:31}D{i:29}D{i:37;invisible:true}
+    D{i:0}D{i:39;invisible:true}
 }
 ##^##*/

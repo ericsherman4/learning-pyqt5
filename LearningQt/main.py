@@ -5,7 +5,9 @@ import datetime as dt
 
 from PySide2.QtGui import QGuiApplication
 from PySide2.QtQml import QQmlApplicationEngine
-from PySide2.QtCore import QObject, Slot, Signal, QTimer
+from PySide2.QtCore import QObject, Slot, Signal, QTimer, QUrl
+
+# QUrl class converts url to a real path on your computer
 
 
 class MainWindow(QObject):
@@ -28,12 +30,15 @@ class MainWindow(QObject):
     # Signal Rectangle Visibles
     rectangleVisible = Signal(bool)
 
-    # Show / Hide Rectangle, we will recieve data back from QML so need to add a slot
-    # the parameter after Slot is the type of data we will recieve back.
-    @Slot(bool)
-    def showHideRectangle(self, isChecked):
-        print("Rectangle Visibility: ", isChecked) # because the state already changed
-        self.rectangleVisible.emit(isChecked)
+    # Signal Open File
+    readText = Signal(str)
+
+    # Function Set Name to Label
+    # the @ symbol is a decorator, see # (https://www.youtube.com/watch?v=r7Dtus7N4pI this is v useful for understanding)
+    # more information on all of this https://wiki.qt.io/Qt_for_Python_Signals_and_Slots
+    @Slot(str)
+    def welcomeText(self, name):
+        self.setName.emit("Welcome, " + name)
 
     # Set Timer Function (dont need slot because no data is being sent from qml
     def setTime(self):
@@ -43,13 +48,34 @@ class MainWindow(QObject):
         # we made the signal but we need to emit the data to the QML
         self.printTime.emit(formatDate)
 
-    # Function Set Name to Label
-    # the @ symbol is a decorator, see # (https://www.youtube.com/watch?v=r7Dtus7N4pI this is v useful for understanding)
-    # more information on all of this https://wiki.qt.io/Qt_for_Python_Signals_and_Slots
+    # Show / Hide Rectangle, we will recieve data back from QML so need to add a slot
+    # the parameter after Slot is the type of data we will recieve back.
+    @Slot(bool)
+    def showHideRectangle(self, isChecked):
+        print("Rectangle Visibility: ", isChecked) # because the state already changed
+        self.rectangleVisible.emit(isChecked)
 
     @Slot(str)
-    def welcomeText(self, name):
-        self.setName.emit("Welcome, " + name)
+    def openTextFile(self, fileUrl):
+        print(fileUrl)
+        file = open(QUrl(fileUrl).toLocalFile(), encoding="utf-8")
+        text = file.read()
+        file.close()
+        print(text)
+        self.readText.emit(str(text))
+
+    # for saving text to a file.
+    @Slot(str, str)
+    def saveTextFile(self, text, fileUrl):
+        file = open(QUrl(fileUrl).toLocalFile(), "w")
+        file.write(text)
+        file.close()
+        print("Writing to file:")
+        print(text)
+
+
+
+
 
 
 if __name__ == "__main__":
