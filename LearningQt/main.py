@@ -79,7 +79,17 @@ class MainWindow(QObject):
 
 
 if __name__ == "__main__":
-    print("Created by Eric Sherman using Youtube Tutorials :)")
+    print("ATTENTION ATTENTION\n\n\n\n")
+    print("tasking:")
+    print("need to fix the openGL resizing thing")
+    print("update it so it swtiches between the pages sucessfully")
+    print("get rid of the application description will go here thing")
+    print("Setting's page?")
+    print("fix it so the date shows up right away when switching to the homepage instead of after")
+    print("anyway to get the homepage to show up with all the data it had before??")
+
+    print("\n\n\n\n\n")
+
     app = QGuiApplication(sys.argv)
     engine = QQmlApplicationEngine()
 
